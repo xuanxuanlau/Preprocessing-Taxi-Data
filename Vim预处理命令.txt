@@ -1,0 +1,55 @@
+%s/重车,运营/运营,重车/g
+%s/空车,运营/运营,空车/g
+
+%s/,超速报警//g
+%s/,紧急报警//g
+%s/,登录//g
+%s/,定位//g
+%s/,补传//g
+
+g/,未定位/d
+g/,设备工作正常/d
+g/,里程:/d
+g/,疲劳驾驶/d
+g/,标志/d
+g!/ACC/d
+
+awk 'BEGIN {FS=OFS=","} {print $1}' shanghai.csv > shanghai_name.csv
+
+删除中文字符
+:%s/\v[^\x00-\xff]+//g
+
+查找同时有多个单词的行
+.*red\&.*blue
+\(a.*b\)\|\(b.*a\)
+
+
+
+预处理指令顺序：
+g!/空车\|重车/d
+g/里程\|未定位\|设备工作正常\|疲劳驾驶\|劫警/d 
+%s/,LED故障\|,补传\|,定位\|,登录\|,超速报警\|,紧急报警\|,计价器故障//g
+%s/\([^\x00-\xff]车\),\(运营\)/\2,\1/g
+
+g!/2015-07-01/d
+
+%s/重车/1/g
+%s/空车/0/g
+%s/,运营//g
+%s/ACC开/on/g
+%s/ACC关/off/g
+
+
+/Users/xuanliu/Documents/学习/RawData2015.07  
+
+1,LED故障,补传,重车,运营
+2,运营,空车,定位
+4,空车,运营,登录,补传
+5,运营,重车,里程
+6,劫警,运营,重车
+7,未定位
+8,
+
+cd /Users/xuanliu/Documents/学习/Data201507
+mvim -S TaxiTrajAssign.vim 20150721.txt
+bash TaxiTrajProcessing.sh
